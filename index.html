@@ -360,7 +360,7 @@ function saveState(){
   localStorage.setItem('chopi_record', STATE.record);
   localStorage.setItem('chopi_upgrades', JSON.stringify(STATE.upgrades));
 }
-function getCrystalMultiplier(){if(currentCharacter==='diana')return 40;if(currentCharacter==='drako')return 45;if(currentCharacter==='angi')return 35;if(currentCharacter==='abi')return 30;if(currentCharacter==='snoopy')return 20;if(currentCharacter==='tama')return 10;return 1;}
+function getCrystalMultiplier(){if(currentCharacter==='titi')return 50;if(currentCharacter==='diana')return 40;if(currentCharacter==='drako')return 45;if(currentCharacter==='angi')return 35;if(currentCharacter==='abi')return 30;if(currentCharacter==='snoopy')return 20;if(currentCharacter==='tama')return 10;return 1;}
 function addCristales(n){ STATE.cristales+=n; saveState(); refreshHUD(); }
 function refreshHUD(){
   document.getElementById('cristales-hud').textContent=STATE.cristales;
@@ -376,6 +376,7 @@ const SHOP_ITEMS=[
   {id:'unlock_angi',name:'🐨 Angi',desc:'Un corredor sólido, veloz y muy resistente.',cost:50,max:1,effect:'x35 cristales',avatar:'sprites/Personajes/koala/KoalaIdle.png',battleStats:{hp:140,atk:8,def:6,speed:14,crit:15},rarity:'Legendario',rarityClass:'legendary',multiplier:'x35',ability:'Fuerza de koala'},
   {id:'unlock_diana',name:'🐻 Diana',desc:'La más completa para correr y pelear.',cost:50,max:1,effect:'x40 cristales',avatar:'sprites/Personajes/diana/idle_01.png',battleStats:{hp:160,atk:11,def:7,speed:15,crit:18},rarity:'Mítico',rarityClass:'mythic',multiplier:'x40',ability:'Estilo feroz'},
   {id:'unlock_drako',name:'🐉 Drako',desc:'El dragón más poderoso, veloz y feroz.',cost:60,max:1,effect:'x45 cristales',avatar:'sprites/Personajes/Drako/idle_01.png',battleStats:{hp:180,atk:13,def:8,speed:16,crit:20},rarity:'Legendario',rarityClass:'legendary',multiplier:'x45',ability:'Fuerza de dragón'},
+  {id:'unlock_titi',name:'🐇 Titi',desc:'Un conejito celestial bendecido con un halo de oro. Veloz, adorable y con un toque de magia divina.',cost:80,max:1,effect:'x50 cristales',avatar:'sprites/Personajes/Titi/idle_rest_01.png',battleStats:{hp:170,atk:12,def:9,speed:18,crit:22},rarity:'Mítico',rarityClass:'mythic',multiplier:'x50',ability:'Salto bendecido'},
   {id:'speed_boost',name:'💨 Velocidad Inicial',desc:'Runner empieza más rápido.',cost:30,max:3,effect:'+0.5 vel/nivel',rarity:'Común',rarityClass:'common',multiplier:'+0.5',ability:'Salida explosiva'},
   {id:'double_jump',name:'🦅 Doble Salto',desc:'Salta dos veces en el aire.',cost:50,max:1,effect:'Habilita doble salto',rarity:'Raro',rarityClass:'rare',multiplier:'x2',ability:'Aire controlado'},
   {id:'magnet',name:'🧲 Imán de Cristales',desc:'Cristales 2x más seguido.',cost:40,max:1,effect:'x2 drop',rarity:'Raro',rarityClass:'rare',multiplier:'x2',ability:'Atracción de energía'},
@@ -387,7 +388,7 @@ const SHOP_ITEMS=[
 ];
 
 function getCharacterAvatar(id){
- const map={chopi:'sprites/Personajes/chopi/Pink_Monster_Idle_4.png',tama:'sprites/Personajes/Tama/Idle.png',snoopy:'sprites/Personajes/Snoopy/correr_1.png',abi:'sprites/Personajes/Abi/correr_1.png',angi:'sprites/Personajes/koala/KoalaIdle.png',diana:'sprites/Personajes/diana/idle_01.png',drako:'sprites/Personajes/Drako/idle_01.png'};
+ const map={chopi:'sprites/Personajes/chopi/Pink_Monster_Idle_4.png',tama:'sprites/Personajes/Tama/Idle.png',snoopy:'sprites/Personajes/Snoopy/correr_1.png',abi:'sprites/Personajes/Abi/correr_1.png',angi:'sprites/Personajes/koala/KoalaIdle.png',diana:'sprites/Personajes/diana/idle_01.png',drako:'sprites/Personajes/Drako/idle_01.png',titi:'sprites/Personajes/Titi/idle_rest_01.png'};
  return map[id]||'';
 }
 
@@ -577,6 +578,11 @@ const DRAKO_FALL=[];for(let i=1;i<=4;i++){let im=new Image();im.src='sprites/Per
 const DRAKO_LAND=[];for(let i=1;i<=4;i++){let im=new Image();im.src='sprites/Personajes/Drako/land_0'+i+'.png';DRAKO_LAND.push(im);}
 const DRAKO_HURT=[];for(let i=1;i<=3;i++){let im=new Image();im.src='sprites/Personajes/Drako/hurt_0'+i+'.png';DRAKO_HURT.push(im);}
 const DRAKO_DIE=[];for(let i=1;i<=4;i++){let im=new Image();im.src='sprites/Personajes/Drako/die_0'+i+'.png';DRAKO_DIE.push(im);}
+
+const TITI_RUN=[];for(let i=1;i<=9;i++){let im=new Image();im.src='sprites/Personajes/Titi/run_0'+i+'.png';TITI_RUN.push(im);}
+const TITI_IDLE=[];for(let i=1;i<=7;i++){let im=new Image();im.src='sprites/Personajes/Titi/idle_rest_0'+i+'.png';TITI_IDLE.push(im);}
+const TITI_IDLE_SIT=[];for(let i=1;i<=2;i++){let im=new Image();im.src='sprites/Personajes/Titi/idle_sit_0'+i+'.png';TITI_IDLE_SIT.push(im);}
+const TITI_IDLE_01=new Image();TITI_IDLE_01.src='sprites/Personajes/Titi/idle_rest_01.png';
 
 const IMG_ABI_RUN=new Image(); IMG_ABI_RUN.src='sprites/Personajes/Abi/correr_1.png';
 
@@ -941,6 +947,16 @@ function drawPinkMonster(ctx, x, y, onGround, inAir){
     if(typeof inAir!=='undefined' && inAir) im=DRAKO_JUMP[charFrame%DRAKO_JUMP.length];
     if(im && im.complete){ctx.drawImage(im,x,y,50,50);return;}
   }
+  if(currentCharacter==='titi'){
+    let frames=onGround ? TITI_RUN : TITI_IDLE_SIT;
+    if(crouching) frames=TITI_IDLE;
+    const im=frames[charFrame%frames.length];
+    if(im && im.complete){
+      ctx.save(); ctx.imageSmoothingEnabled=false;
+      ctx.drawImage(im,x,y-8,60,60);
+      ctx.restore(); return;
+    }
+  }
   if(pmTimer>5){ pmFrame=(pmFrame+1)%(inAir?8:onGround?6:4); pmTimer=0; }
   ctx.imageSmoothingEnabled=false;
   ctx.save();
@@ -1116,7 +1132,8 @@ function getClickerBattleSprites(key){
     abi:{idle:[ABI_FRAMES[0]||IMG_ABI_RUN,1],run:[ABI_FRAMES[0]||IMG_ABI_RUN,1],hurt:[ABI_FRAMES[0]||IMG_ABI_RUN,1],death:[ABI_FRAMES[0]||IMG_ABI_RUN,1]},
     angi:{idle:[ANGI_IDLE,1],run:[ANGI_FRAMES[0]||ANGI_IDLE,1],hurt:[ANGI_IDLE,1],death:[ANGI_DEAD,1]},
     diana:{idle:[DIANA_IDLE_01,1],run:[DIANA_FRAMES[0]||DIANA_IDLE_01,1],hurt:[DIANA_IDLE_01,1],death:[DIANA_IDLE_01,1]},
-    drako:{idle:[DRAKO_IDLE[0]||DRAKO_RUN[0],1],run:[DRAKO_RUN[0]||DRAKO_IDLE[0],1],hurt:[DRAKO_HURT[0]||DRAKO_IDLE[0],1],death:[DRAKO_DIE[0]||DRAKO_IDLE[0],1]}
+    drako:{idle:[DRAKO_IDLE[0]||DRAKO_RUN[0],1],run:[DRAKO_RUN[0]||DRAKO_IDLE[0],1],hurt:[DRAKO_HURT[0]||DRAKO_IDLE[0],1],death:[DRAKO_DIE[0]||DRAKO_IDLE[0],1]},
+    titi:{idle:[TITI_IDLE_01,1],run:[TITI_RUN[0]||TITI_IDLE_01,1],hurt:[TITI_IDLE[0]||TITI_IDLE_01,1],death:[TITI_IDLE_01,1]}
   };
   return map[key]||fb;
 }
